@@ -10,6 +10,7 @@ Main bot module
 
 import argparse
 import sys
+import tracemalloc
 from datetime import datetime
 from os import getenv, PathLike
 from os.path import abspath, dirname, join
@@ -21,7 +22,7 @@ from ccxt.base.errors import InvalidOrder
 from ccxt import Exchange
 from dotenv import load_dotenv
 
-from config import Color, TestData
+from config import Color, TestData, GeneralParameters
 from predict import PredictionApp
 
 
@@ -31,6 +32,11 @@ class App:
 
     """
     SUPPORTED_EXCHANGES: Collection[str] = ccxt.exchanges
+
+    # Default maximum RAM capacity (in MB)
+    DEFAULT_MAX_RAM: int = GeneralParameters.DEFAULT_MAX_RAM
+    DEFAULT_RAM_MEMORY_TAG: str = GeneralParameters.DEFAULT_RAM_MEMORY_TAG
+    SQ_1024: int = 1024 * 1024
 
     def __init__(
             self: Self,
@@ -42,6 +48,8 @@ class App:
         :param env_file_path: filename of .env file to use for app
         :param prediction_api: function
         """
+
+        tracemalloc.start()
 
         # If .env filepath is supplied, use it. Or else '.env' is used.
         env_file_path = env_file_path or ".env"
@@ -313,6 +321,19 @@ class App:
 
         return False
 
+    @staticmethod
+    def output_memory_monitor(
+            max_memory: int | float = DEFAULT_MAX_RAM,
+            div_factor: int | float = SQ_1024,
+            memory_tag: str = DEFAULT_RAM_MEMORY_TAG
+    ) -> None:
+        current, peak = tracemalloc.get_traced_memory()
+        current, peak = current // div_factor, peak // div_factor
+        is_maxed: str = " (peaked over MAX, restart recommended)" if peak > max_memory else ""
+
+        print(f"\t[TRCM]\t🚦 Current memory usage: {current} {memory_tag}, "
+              f"peak usage: {peak} {memory_tag}{is_maxed}")
+
     def main(self: Self, infinite_loop_condition: bool) -> None:
         """
         Main bot cycle logic.
@@ -332,6 +353,8 @@ class App:
               f"\t[INFO]\t🚀 Started algorithm with pair `{self.symbol}`.")
 
         while infinite_loop_condition:
+            self.output_memory_monitor()
+
             try:
                 # Market Data Print
                 current_time = datetime.now()
