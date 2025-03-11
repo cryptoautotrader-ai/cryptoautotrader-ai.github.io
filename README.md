@@ -134,6 +134,9 @@ Also if `DEFAULT_PREDICTION_API=PROBABILITY_LLM`, then additional:
 
 *Steps 3 and 4 are irrelevant, if [.Dockerfile](.Dockerfile) is used*
 
+Running with a `-d` or `--dashboard` flag will result in forwarding program output to a local flask server of a Dash app (only supported for `run` mode).
+This dashboard option will also show a plot of transaction cost for successfully placed orders (upward transaction cost trend coincides with portfolio estimation growth, so it's useful info).
+
 #### 1
 
 Create `.env` file/-s:
