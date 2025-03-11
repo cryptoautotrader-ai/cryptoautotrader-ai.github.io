@@ -8,8 +8,7 @@ from dataclasses import dataclass
 
 @dataclass
 class GeneralParameters:
-    DEFAULT_MAX_RAM: int = 512
-    DEFAULT_RAM_MEMORY_TAG: str = "MB"
+    DEFAULT_MAX_RAM: int = 256
 
 
 @dataclass

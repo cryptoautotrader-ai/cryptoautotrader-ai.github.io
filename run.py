@@ -22,6 +22,8 @@ from ccxt.base.errors import InvalidOrder
 from ccxt import Exchange
 from dotenv import load_dotenv
 
+import dashboard
+from integrate_dashboard import OutputIntegration
 from config import Color, TestData, GeneralParameters
 from predict import PredictionApp
 
@@ -35,13 +37,13 @@ class App:
 
     # Default maximum RAM capacity (in MB)
     DEFAULT_MAX_RAM: int = GeneralParameters.DEFAULT_MAX_RAM
-    DEFAULT_RAM_MEMORY_TAG: str = GeneralParameters.DEFAULT_RAM_MEMORY_TAG
     SQ_1024: int = 1024 * 1024
 
     def __init__(
             self: Self,
             prediction_api: Callable[[Any], str],
-            env_file_path: str = None
+            output_integration: OutputIntegration | None = None,
+            env_file_path: str | None = None
     ) -> None:
         """
 
@@ -64,6 +66,10 @@ class App:
 
             # Exchange fee per transaction (0.1% = 0.001)
             self.fee: float = float(getenv("DEFAULT_EXCHANGE_FEE"))
+
+            self.user_output = output_integration.output
+            self.handle_data = output_integration.handle_data
+            self.memory_output = output_integration.handle_memory_data
 
         else:
             sys.exit(f"No valid exchange name provided\n"
@@ -127,7 +133,7 @@ class App:
         """
         try:
             transaction_cost: float = round(amount * float(price), 2)
-            print(f"\t[INFO]\t⭐️ {Color.ITALIC}Trying to {buy_or_sell} {self.base_asset} with "
+            self.user_output(f"\t[INFO]\t⭐️ {Color.ITALIC}Trying to {buy_or_sell} {self.base_asset} with "
                   f"total transaction value ≈ {transaction_cost} {self.quote_asset}.{Color.END}")
             if amount > self.min_transaction_value_in_base:
                 order_id: Mapping[str, Any] = self.exchange.create_order(
@@ -141,7 +147,7 @@ class App:
                 raise ValueError("\t[INFO]\t⛔️ Won't process order (transaction too small).\n")
 
         except InvalidOrder as error:
-            print(f"\t[ERROR]\tInvalid order:\n\t\t{error}.\n")
+            self.user_output(f"\t[ERROR]\tInvalid order:\n\t\t{error}.\n")
             return {}
 
         except ValueError as error:
@@ -150,9 +156,10 @@ class App:
 
         else:
 
-            print(f"[ACTION DONE]\t🤝 Place a limit {Color.BOLD}{buy_or_sell} order{Color.END}"
+            self.user_output(f"[ACTION DONE]\t🤝 Place a limit {Color.BOLD}{buy_or_sell} order{Color.END}"
                   f" of {Color.BOLD}{self.base_asset.lower()}{amount}{Color.END} x"
                   f" {self.quote_asset.lower()}{price} ≈ {self.quote_asset.lower()}{transaction_cost}")
+            self.handle_data(transaction_cost)
             return order_id
 
     def prepare_order(self: Self) -> tuple[float | None, float | None, float | None, float | None]:
@@ -162,14 +169,14 @@ class App:
         """
 
         # Fetch the current ticker information for the symbol
-        print("\n\t[INFO]\tFetch the current info for the symbol.")
+        self.user_output("\n\t[INFO]\tFetch the current info for the symbol.")
 
         # Get current balance
         balance = self.exchange.fetch_balance()
         base_asset_balance = balance[self.base_asset]["free"]
         quote_asset_balance = balance[self.quote_asset]["free"]
-        print(f"\t[INFO]\t💰 {self.base_asset} balance: {base_asset_balance}")
-        print(f"\t[INFO]\t💵 {self.quote_asset} balance: {quote_asset_balance}")
+        self.user_output(f"\t[INFO]\t💰 {self.base_asset} balance: {base_asset_balance}")
+        self.user_output(f"\t[INFO]\t💵 {self.quote_asset} balance: {quote_asset_balance}")
 
         try:
             orderbook: Mapping[str, Any] = self.exchange.fetch_order_book(symbol=self.symbol)
@@ -181,17 +188,17 @@ class App:
                 raise Exception("Bid price is None")
 
         except BaseException as error:
-            print(f"\t[WARNING]\t...Retrying because of some error:\n\t\t{error}.\n")
+            self.user_output(f"\t[WARNING]\t...Retrying because of some error:\n\t\t{error}.\n")
             self.retries_before_sleep_counter += 1
             if self.retries_before_sleep_counter == self.retries_before_sleep_limit:
                 self.retries_before_sleep_counter = 0
-                self.global_sleep()
+                self.self_sleep()
             return None, None, None, None
 
         # Check the current bid and ask prices
         bid: float = float(bid)
         ask: float = float(ask)
-        print(f"\t[INFO]\tBid {Color.ITALIC}≈ {round(bid, 4)} {self.quote_asset}{Color.END}"
+        self.user_output(f"\t[INFO]\tBid {Color.ITALIC}≈ {round(bid, 4)} {self.quote_asset}{Color.END}"
               f", Ask {Color.ITALIC}≈ {round(ask, 4)} {self.quote_asset}{Color.END}\n")
 
         # Price is ALWAYS in quote asset (2nd item in trading pair `1st/2nd`)
@@ -219,10 +226,10 @@ class App:
         :param open_orders:
         :return: bool, if the while cycle of orders should be skipped to the next iteration
         """
-        print("\t[INFO]\t🛑 There are open orders.")
+        self.user_output("\t[INFO]\t🛑 There are open orders.")
 
         self.cancel_order_counter += 1
-        print(f"\t[INFO]\t💪🏻 {Color.ITALIC}Current open orders counter:{Color.END}"
+        self.user_output(f"\t[INFO]\t💪🏻 {Color.ITALIC}Current open orders counter:{Color.END}"
               f" {Color.BOLD}{Color.DARK_CYAN}{self.cancel_order_counter}{Color.END}.")
 
         if self.cancel_order_counter == self.cancel_order_limit:
@@ -230,7 +237,7 @@ class App:
             for order in open_orders:
                 order_id_to_cancel: str = order.get("id")
                 self.exchange.cancel_order(order_id_to_cancel)
-                print(f"[ACTION DONE]\t☑️ {Color.BOLD}Order"
+                self.user_output(f"[ACTION DONE]\t☑️ {Color.BOLD}Order"
                       f" cancelled{Color.END} with id: {order_id_to_cancel}")
             return True
 
@@ -242,12 +249,12 @@ class App:
 
         :return: if the while cycle of orders should be skipped to the next iteration
         """
-        print("\t[INFO]\t🟢 No open orders.")
+        self.user_output("\t[INFO]\t🟢 No open orders.")
         self.cancel_order_counter = 0
 
         data: Any = self.exchange.fetch_ohlcv(
             self.symbol, self.timeframe, limit=self.data_vector_length)
-        print("\t[INFO]\t📊 Got data: "
+        self.user_output("\t[INFO]\t📊 Got data: "
               f"({self.data_vector_length} x {self.timeframe}).")
 
         try:
@@ -255,19 +262,19 @@ class App:
             prediction_main: Any = self.predict_up_or_down(data)
             # prediction_support: Any = self.predict_up_or_down(data)
             if prediction_main:
-                print("\t[AI]\t🤖 Got prediction.")
+                self.user_output("\t[AI]\t🤖 Got prediction.")
 
             else:
-                print("\t[AI]\t🤖 Could not get prediction.")
+                self.user_output("\t[AI]\t🤖 Could not get prediction.")
                 self.retries_before_sleep_counter += 1
                 if self.retries_before_sleep_counter == self.retries_before_sleep_limit:
                     self.retries_before_sleep_counter = 0
-                    self.global_sleep()
+                    self.self_sleep()
                 return True
 
             # If bullish
             if prediction_main == "up":
-                print(f"\t[AI]\t🤖 Is {Color.GREEN}bullish{Color.END} on {self.base_asset}.")
+                self.user_output(f"\t[AI]\t🤖 Is {Color.GREEN}bullish{Color.END} on {self.base_asset}.")
 
                 price_buy, _, amount_buy, _ = self.prepare_order()
                 if amount_buy is None:
@@ -281,11 +288,11 @@ class App:
                     price=price_buy
                 )
                 if new_order:
-                    print(f"\t[ORDER]\tBuy order id: {new_order.get("id")}")
+                    self.user_output(f"\t[ORDER]\tBuy order id: {new_order.get("id")}")
 
             # If bearish
             elif prediction_main == "down":
-                print(f"\t[AI]\t🤖 Is {Color.RED}bearish{Color.END} on {self.base_asset}.")
+                self.user_output(f"\t[AI]\t🤖 Is {Color.RED}bearish{Color.END} on {self.base_asset}.")
 
                 _, price_sell, _, amount_sell = self.prepare_order()
                 if amount_sell is None:
@@ -300,15 +307,15 @@ class App:
                 )
 
                 if new_order:
-                    print(f"\t[ORDER]\tSell order id: {new_order.get("id")}")
+                    self.user_output(f"\t[ORDER]\tSell order id: {new_order.get("id")}")
 
             # If indecisive
             elif prediction_main == "hold":
-                print(f"\t[AI]\t🤖 Is {Color.PURPLE}hold{Color.END} on {self.base_asset}.")
-                print("\t[INFO]\t😎 Doing nothing.")
+                self.user_output(f"\t[AI]\t🤖 Is {Color.PURPLE}hold{Color.END} on {self.base_asset}.")
+                self.user_output("\t[INFO]\t😎 Doing nothing.")
 
             else:
-                self.global_sleep()
+                self.self_sleep()
                 return True
 
         except BaseException as error:
@@ -316,23 +323,20 @@ class App:
             if self.retries_before_sleep_counter == self.retries_before_sleep_limit:
                 self.retries_before_sleep_counter = 0
                 self.default_sleep_message(error, "ProbablyAIButCouldBeAnything")
-                self.global_sleep()
+                self.self_sleep()
             return True
 
         return False
 
-    @staticmethod
     def output_memory_monitor(
-            max_memory: int | float = DEFAULT_MAX_RAM,
-            div_factor: int | float = SQ_1024,
-            memory_tag: str = DEFAULT_RAM_MEMORY_TAG
+            self: Self,
+            max_memory: int | float = DEFAULT_MAX_RAM
     ) -> None:
         current, peak = tracemalloc.get_traced_memory()
-        current, peak = current // div_factor, peak // div_factor
+        current, peak = current // self.SQ_1024, peak // self.SQ_1024
         is_maxed: str = " (peaked over MAX, restart recommended)" if peak > max_memory else ""
-
-        print(f"\t[TRCM]\t🚦 Current memory usage: {current} {memory_tag}, "
-              f"peak usage: {peak} {memory_tag}{is_maxed}")
+        msg = f"\t[TRCM]\t🚦 Current memory usage: {current} MB, peak usage: {peak} MB{is_maxed}"
+        self.memory_output(msg)
 
     def main(self: Self, infinite_loop_condition: bool) -> None:
         """
@@ -342,7 +346,7 @@ class App:
         :return: None
         """
 
-        print(f"\t[INFO]\t🏦 Exchange: `{self.exchange_name}`.\n"
+        self.user_output(f"\t[INFO]\t🏦 Exchange: `{self.exchange_name}`.\n"
               "\t[INFO]\t💼 Algorithm trust percentage (reinvestment rate): "
               f"{Color.DARK_CYAN}{self.algorithm_trust_percentage * 100}%{Color.END}.\n"
               "\t[INFO]\t📈 Algorithm premium: "
@@ -358,11 +362,11 @@ class App:
             try:
                 # Market Data Print
                 current_time = datetime.now()
-                print(f"\n\t[INFO]\t⌚️ {Color.BOLD}Current time:"
+                self.user_output(f"\n\t[INFO]\t⌚️ {Color.BOLD}Current time:"
                       f" {current_time.strftime('%B %d, %Y %I:%M:%S %p')}{Color.END}")
 
                 # Check if there are any open orders
-                print("\t[INFO]\t👀 Checking for open orders for trading pair")
+                self.user_output("\t[INFO]\t👀 Checking for open orders for trading pair")
                 open_orders: Collection[Any] = self.exchange.fetch_open_orders(self.symbol)
                 if not open_orders:
                     do_cycle_continue: bool = self.run_if_not_open_orders()
@@ -375,36 +379,36 @@ class App:
                     if do_cycle_continue:
                         continue
 
-                self.global_sleep()
+                self.self_sleep()
 
             except KeyboardInterrupt:
-                print("[END]\tEND `main` module on KeyboardInterrupt.")
+                self.user_output("[END]\tEND `main` module on KeyboardInterrupt.")
                 break
 
             except ccxt.NetworkError as error:
                 self.default_sleep_message(error, "NetworkError")
-                self.global_sleep()
+                self.self_sleep()
                 continue
 
             except ccxt.ExchangeError as error:
                 self.default_sleep_message(error, "ExchangeError")
-                self.global_sleep()
+                self.self_sleep()
                 continue
 
             except Exception as error:
                 self.default_sleep_message(error, "Some other")
-                self.global_sleep()
+                self.self_sleep()
                 continue
 
-        print("[END]\t👋🏻 END `main` module.")
+        self.user_output("[END]\t👋🏻 END `main` module.")
 
-    def global_sleep(self: Self) -> None:
+    def self_sleep(self: Self) -> None:
         """
         Invoke time.sleep with needed extra logic.
 
         :return: None
         """
-        print(f"\t[INFO]\t🙈 Pause for {self.base_sleep_time} seconds.")
+        self.user_output(f"\t[INFO]\t🙈 Pause for {self.base_sleep_time} seconds.")
         sleep(self.base_sleep_time)
 
     def default_sleep_message(self: Self, error: Any, tag: str) -> None:
@@ -415,7 +419,7 @@ class App:
         :param tag: str
         :return: None
         """
-        print(f"\t[ERROR]\t🙈 Retrying after sleep ({self.base_sleep_time} seconds). "
+        self.user_output(f"\t[ERROR]\t🙈 Retrying after sleep ({self.base_sleep_time} seconds). "
               f"{tag} exception:\n\t\t{error}.\n")
 
 
@@ -423,19 +427,16 @@ def global_main() -> None:
     console_arguments_parser = argparse.ArgumentParser(
         prog="run.py",
         description="run.py will place trades in accordance with specified parameters. "
-                    "Use with `test` command to only run default data through prediction API;"
+                    "Use with `test` command to only run default data through prediction API; "
                     "use with `run` command to run main functionality.",
-        epilog="Extremely caution is advised, "
-               "don't run the program unless knowing EXACTLY what will happen."
+        epilog="Extremely caution is advised, don't run the program unless knowing EXACTLY what will happen."
     )
-
     default_main_environment_filename = "main.env"
     default_prediction_environment_filename = "probability_llm.env"
     subparsers = console_arguments_parser.add_subparsers(
         dest="running_mode",
         required=True
     )
-
     parser_test_predict_api = subparsers.add_parser("test")
     parser_test_predict_api.add_argument(
         "-p", "--predictions",
@@ -443,7 +444,6 @@ def global_main() -> None:
         type=str,
         required=False,
     )
-
     parser_run = subparsers.add_parser("run")
     parser_run.add_argument(
         "-e", "--env",
@@ -456,6 +456,12 @@ def global_main() -> None:
         default=default_prediction_environment_filename,
         type=str,
         required=False,
+    )
+    # New argument for dashboard mode:
+    parser_run.add_argument(
+        "-d", "--dashboard",
+        action="store_true",
+        help="Launch the app in dashboard mode (powered by Streamlit)"
     )
 
     console = console_arguments_parser.parse_args()
@@ -471,16 +477,29 @@ def global_main() -> None:
 
     match mode:
         case "run":
-            print("[START]\tSTARTED module in `run` mode.")
             main_trading_env_path = join(current_path, console.env)
 
-            # Main logic
-            trading_bot: App = App(
-                prediction_api=prediction_function,
-                env_file_path=main_trading_env_path
-            )
+            # If -d or --dashboard flags have been used to run the script
+            if console.dashboard:
+                print("[START]\tRunning in `run` mode with dashboard & trading logic concurrently.")
+                kucoin_trading_bot: App = App(
+                    prediction_api=prediction_function,
+                    output_integration=OutputIntegration("dashboard"),
+                    env_file_path = main_trading_env_path
+                )
+                dashboard.run_dashboard()
 
-            sys.exit(trading_bot.main(infinite_loop_condition=True))
+            # No -d or --dashboard flag has been given
+            else:
+                print("[START]\tStarted module in `run` mode without dashboard.")
+                kucoin_trading_bot: App = App(
+                    prediction_api=prediction_function,
+                    output_integration=OutputIntegration("console"),
+                    env_file_path=main_trading_env_path
+                )
+
+            # Regardless of usage of -d or --dashboard flags
+            sys.exit(kucoin_trading_bot.main(infinite_loop_condition=True))
 
         case "test":
             print("[START]\tSTARTED module in `test` mode.")
@@ -488,7 +507,8 @@ def global_main() -> None:
                   prediction_function(TestData.DEFAULT_DATA_TO_TEST_API_UP))
             print("\t[INFO]\tDowntrend recognized ?",
                   prediction_function(TestData.DEFAULT_DATA_TO_TEST_API_DOWN))
-            sys.exit(print("[END] Test mode exited."))
+            sys.exit(print("END] Test mode exited."))
+
 
 
 if __name__ == "__main__":
