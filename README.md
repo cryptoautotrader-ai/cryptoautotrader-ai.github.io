@@ -248,6 +248,9 @@ This software is heavily reliant on the following masterpieces of programming:
   their [LICENSE](https://github.com/jealous/stockstats/blob/master/LICENSE.txt) (to date: Jan 27, 2025)
 * [openai library](https://github.com/openai/openai-python) with
   their [LICENSE](https://github.com/openai/openai-python/blob/main/LICENSE) (to date: Feb 6, 2025)
+* [plotly library](https://github.com/plotly) with their [LICENSE](https://github.com/plotly/plotly.py/blob/main/LICENSE.txt) (to date: Mar 11, 2025)
+* [waitress library](https://pypi.org/project/waitress/) with their [LICENSE](https://github.com/Pylons/waitress/blob/main/LICENSE.txt) (to date: Mar 11, 2025)
+* [dash library](https://github.com/plotly/dash) with their [LICENSE](https://github.com/plotly/dash/blob/dev/LICENSE) (to date: Mar 11, 2025)
 
 ## Appendix
 
