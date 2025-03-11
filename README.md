@@ -24,7 +24,7 @@ This software is open source under a permissive [License](LICENSE), and it's FRE
 
 *Support for older Python versions is not guaranteed, but deemed probable for 3.10 and newer.*
 
-*Console only app (no GUI, but user-friendly messages).*
+**Console** only or **PlotlyDash** GUI optional.
 
 ## Features
 
