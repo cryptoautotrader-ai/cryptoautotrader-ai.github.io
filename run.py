@@ -482,7 +482,7 @@ def global_main() -> None:
             # If -d or --dashboard flags have been used to run the script
             if console.dashboard:
                 print("[START]\tRunning in `run` mode with dashboard & trading logic concurrently.")
-                kucoin_trading_bot: App = App(
+                trading_bot: App = App(
                     prediction_api=prediction_function,
                     output_integration=OutputIntegration("dashboard"),
                     env_file_path = main_trading_env_path
@@ -492,14 +492,14 @@ def global_main() -> None:
             # No -d or --dashboard flag has been given
             else:
                 print("[START]\tStarted module in `run` mode without dashboard.")
-                kucoin_trading_bot: App = App(
+                trading_bot: App = App(
                     prediction_api=prediction_function,
                     output_integration=OutputIntegration("console"),
                     env_file_path=main_trading_env_path
                 )
 
             # Regardless of usage of -d or --dashboard flags
-            sys.exit(kucoin_trading_bot.main(infinite_loop_condition=True))
+            sys.exit(trading_bot.main(infinite_loop_condition=True))
 
         case "test":
             print("[START]\tSTARTED module in `test` mode.")
