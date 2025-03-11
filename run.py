@@ -396,8 +396,8 @@ class App:
               f"{tag} exception:\n\t\t{error}.\n")
 
 
-if __name__ == "__main__":
-    CONSOLE_ARGUMENTS_PARSER = argparse.ArgumentParser(
+def global_main() -> None:
+    console_arguments_parser = argparse.ArgumentParser(
         prog="run.py",
         description="run.py will place trades in accordance with specified parameters. "
                     "Use with `test` command to only run default data through prediction API;"
@@ -406,36 +406,36 @@ if __name__ == "__main__":
                "don't run the program unless knowing EXACTLY what will happen."
     )
 
-    DEFAULT_MAIN_ENVIRONMENT_FILENAME = "main.env"
-    DEFAULT_PREDICTION_ENVIRONMENT_FILENAME = "probability_llm.env"
-    SUBPARSERS = CONSOLE_ARGUMENTS_PARSER.add_subparsers(
+    default_main_environment_filename = "main.env"
+    default_prediction_environment_filename = "probability_llm.env"
+    subparsers = console_arguments_parser.add_subparsers(
         dest="running_mode",
         required=True
     )
 
-    PARSER_TEST_PREDICT_API = SUBPARSERS.add_parser("test")
-    PARSER_TEST_PREDICT_API.add_argument(
+    parser_test_predict_api = subparsers.add_parser("test")
+    parser_test_predict_api.add_argument(
         "-p", "--predictions",
-        default=DEFAULT_PREDICTION_ENVIRONMENT_FILENAME,
+        default=default_prediction_environment_filename,
         type=str,
         required=False,
     )
 
-    PARSER_RUN = SUBPARSERS.add_parser("run")
-    PARSER_RUN.add_argument(
+    parser_run = subparsers.add_parser("run")
+    parser_run.add_argument(
         "-e", "--env",
-        default=DEFAULT_MAIN_ENVIRONMENT_FILENAME,
+        default=default_main_environment_filename,
         type=str,
         required=False,
     )
-    PARSER_RUN.add_argument(
+    parser_run.add_argument(
         "-p", "--predictions",
-        default=DEFAULT_PREDICTION_ENVIRONMENT_FILENAME,
+        default=default_prediction_environment_filename,
         type=str,
         required=False,
     )
 
-    console = CONSOLE_ARGUMENTS_PARSER.parse_args()
+    console = console_arguments_parser.parse_args()
     mode = console.running_mode
 
     # Paths
@@ -466,3 +466,7 @@ if __name__ == "__main__":
             print("\t[INFO]\tDowntrend recognized ?",
                   prediction_function(TestData.DEFAULT_DATA_TO_TEST_API_DOWN))
             sys.exit(print("[END] Test mode exited."))
+
+
+if __name__ == "__main__":
+    global_main()
