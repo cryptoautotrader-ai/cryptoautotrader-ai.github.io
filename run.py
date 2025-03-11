@@ -475,12 +475,12 @@ def global_main() -> None:
             main_trading_env_path = join(current_path, console.env)
 
             # Main logic
-            kucoin_trading_bot: App = App(
+            trading_bot: App = App(
                 prediction_api=prediction_function,
                 env_file_path=main_trading_env_path
             )
 
-            sys.exit(kucoin_trading_bot.main(infinite_loop_condition=True))
+            sys.exit(trading_bot.main(infinite_loop_condition=True))
 
         case "test":
             print("[START]\tSTARTED module in `test` mode.")
