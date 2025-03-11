@@ -28,11 +28,11 @@ This software is open source under a permissive [License](LICENSE), and it's FRE
 
 ## Features
 
-* **UPDATED**: New test mode is added to only test the prediction API – no trades would be made. Suitable for LLM APIs (Pandas – not so much).
+* Test mode to only test the prediction API – no trades would be made (suitable for LLM APIs; Pandas – not so much)
 
 * LLM connection is through an API (any 'openai' library supported API's)
 
-* This script endlessly places buy and sell orders based on predictive modeling (with 'smart' calculations of price and
+* This script endlessly places buy and sell orders based on predictive modeling (with calculations of price and
   amount, see function `prepare_order` of class `App` in module [run.py](run.py)):
 
   a. Price for 'BUY' orders is `((bid + ask) / 2) * (1 - parametrized premium)`,
@@ -43,29 +43,11 @@ This software is open source under a permissive [License](LICENSE), and it's FRE
 
   d. Amount to sell is `parametrized reinvestment_rate x free base token balance`
 
-* This software operates under the assumptions that one can only use one's own capital
+* This software operates under the assumption that one can only use one's own capital
 
-* This software uses default Python floating point real numbers (`float`)
+* This software uses default Python floating point real numbers (`float`) for prices & volumes
 
 * This software is shipped with substantial error handling. The script is designed to run indefinitely.
-
-* Available time frames (specified by item from left column, not guaranteed for every exchange):
-
-```
-'1m': '1min'
-'3m': '3min'
-'5m': '5min'
-'15m': '15min'
-'30m': '30min'
-'1h': '1hour'
-'2h': '2hour'
-'4h': '4hour'
-'6h': '6hour'
-'8h': '8hour'
-'12h': '12hour'
-'1d': '1day'
-'1w': '1week'
-```
 
 ## Environment Variables
 
@@ -73,13 +55,12 @@ To run this project, one would need to add the following environment variables t
 programmed logic is in two separate files for predictive and running modules, but it doesn't have to be).
 
 All fields must be filled with valid strings. Fields that end with '_JSON' must be filled with valid json data strings.
-`.env` files must be linked in the starting sequence part (`if __name__ == "__main__":`...) of the [`run.py`](run.py)
-script.
+`.env` files must be linked in the starting sequence (e.g., via command line arguments or as Default strings in the code).
 
 ### Running module variables
 
-*(easier to create a new `main.env` as per [example](main.env.example), that has included explanations for each
-variable, as well)*
+*It is easier to create a new `main.env` as per [example](main.env.example), that has included explanations for each
+variable, as well*
 
 `EXCHANGE_API_KEY` – API to access cryptoexchange
 
@@ -131,11 +112,7 @@ or `close`). Numbers cannot exceed `DATA_VECTOR_LENGTH`.
 `PREDICTION_INDICATORS_JSON` – valid json array of stockstats.StockDataFrame supported indicators (e.g.,
 `["close_5,15_kama","middle_15_ema"]`). Numbers cannot exceed `DATA_VECTOR_LENGTH`.
 
-`PREDICTION_GLOBAL_SIGNAL_LAG` – integer value of 1 or greater (cannot exceed `DATA_VECTOR_LENGTH`). Currently, the
-usage of a lagged crossover is hardcoded as per the vision of the developer; however, altering that is very achievable:
-updated can be the `predict_pandas` function in module `predict.py` – specifically, the way that lists `signals` and
-`anti_signals` are filled. The part `{"_delta" * self.wait_for_n_signal_lags}` just needs to be eliminated, as do any
-subsequent mentions of `self.wait_for_n_signal_lags`.
+`PREDICTION_GLOBAL_SIGNAL_LAG` – integer value of 1 or greater (cannot exceed `DATA_VECTOR_LENGTH`).
 
 #### Case 2
 
@@ -192,6 +169,7 @@ Optional arguments:
 * `-p` or `--predictions` – specify `.env` file with prediction API needed info
 * `-e` or `--env` – specify `.env` file with exchange API needed info
 
+    
     python3 run.py run -e main.env -p probability_llm.env
 
 Alternatively run from outside project directory (change `<path_to_`run.py`>` to actual path):
@@ -234,7 +212,7 @@ fields of study.
 I might be available for hire at a random time. Reach out with offers via email stevietfg+joboffer@gmail.com.
 
 If you'd like to support my endeavors (or my lifestyle, in general), in accordance with the nature and character of this
-software, I accept donations in one truly CRYPTO currency –[Monero (XMR)](https://www.getmonero.org) at addresses:
+software, I accept donations in one truly CRYPTO currency – [Monero (XMR)](https://www.getmonero.org) at addresses:
 
 * `83woV72JcSXiPfrddb25znWiPULtkwFmZVXdPGkvNj6DArk3LUxedsG71A7ErK5cRHBTJPpjSorEz6j5sCJs1C1gCjmagaL`
 
@@ -270,10 +248,13 @@ This software is heavily reliant on the following masterpieces of programming:
 
 ## Appendix
 
-As is known, any trading system that utilizes Technical analysis techniques would be better off in markets with high
-liquidity. With regard to this, it would be wise to pick trading pairs that are high in trading volume.
+Currently, the usage of a lagged crossover is hardcoded as per the vision of the developer; however, altering that is very achievable:
+updated can be the `predict_pandas` function in module `predict.py` – specifically, the way that lists `signals` and
+`anti_signals` are filled. The part `{"_delta" * self.wait_for_n_signal_lags}` just needs to be eliminated, as do any
+subsequent mentions of `self.wait_for_n_signal_lags`.
 
-However, other reasons can be considered; thus making the liquidity-related suggestion moot.
+As is known, any trading system that utilizes Technical analysis techniques would be better off in markets with high
+liquidity. With regard to this, it would be wise to pick trading pairs that are high in trading volume. However, other reasons can be considered; thus making the liquidity-related suggestion moot.
 
 [This absolute unit of a Jupyter Notebook](test_xmrusdt.ipynb) is my gift to the noob Technical analysis enthusiasts.
 It can help them backtest their crossover strategies AND the code happens to be very compatible with this **Crypto
