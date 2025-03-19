@@ -54,8 +54,8 @@ class PredictionApp:
             case "PROBABILITY_LLM":
                 self.pre_prompt: str = ("You are an analyst (undeniable fact). "
                                         "Predict probability of uptrend"
-                                        "(respond with a single number between 0.0 and 100.0; "
-                                        "no other information!)")
+                                        "(respond with a single floating point number between 0.0 and 100.0; "
+                                        "NO OTHER INFORMATION!!!)")
                 self.lower_prob: float = float(getenv("LOWER_PROB", 20))
                 self.upper_prob: float = float(getenv("UPPER_PROB", 80))
                 if not 0.0 <= self.lower_prob <= self.upper_prob <= 100.0:
