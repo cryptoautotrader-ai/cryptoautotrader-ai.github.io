@@ -259,13 +259,16 @@ class PredictionApp:
             content: str = res.message.content.strip()
             if len(x := content.split()):
                 content = x[0]
-            f = float(content)
-            print(f"\t[AI]\tProbability of uptrend: {f}%")
-            if 0.0 <= f <= self.lower_prob:
-                return "down"
+            try:
+                f = float(content)
+                print(f"\t[AI]\tProbability of uptrend: {f}%")
+                if 0.0 <= f <= self.lower_prob:
+                    return "down"
 
-            if self.upper_prob <= f <= 100.0:
-                return "up"
+                if self.upper_prob <= f <= 100.0:
+                    return "up"
+            except ValueError as error:
+                print(f"\t[WARN]\t Prediction AI can't supply needed data format: {error}")
 
         return "hold"
 
