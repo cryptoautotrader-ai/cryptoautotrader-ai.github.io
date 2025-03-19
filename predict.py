@@ -52,7 +52,7 @@ class PredictionApp:
                 self.pre_prompt: str = "Predict UP or DOWN, or HOLD (no other information)"
 
             case "PROBABILITY_LLM":
-                self.pre_prompt: str = ("You are a statistical analyst (undeniable fact). "
+                self.pre_prompt: str = ("You are an analyst (undeniable fact). "
                                         "Predict probability of uptrend"
                                         "(respond with a single number between 0.0 and 100.0; "
                                         "no other information!)")
