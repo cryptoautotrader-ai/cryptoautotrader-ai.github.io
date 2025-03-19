@@ -111,7 +111,8 @@ class App:
 
         # Set the symbol you want to trade on KuCoin
         self.symbol: str = getenv("TRADING_PAIR")
-        pair_lst: list = self.symbol.split("/")
+        pair_lst: list = self.symbol.split("/") if "/" in self.symbol else [
+            getenv("TRADING_BASE"), getenv("TRADING_QUOTE")]
         self.base_asset: str = pair_lst[0]
         self.quote_asset: str = pair_lst[1]
 
@@ -236,7 +237,14 @@ class App:
             self.cancel_order_counter = 0
             for order in open_orders:
                 order_id_to_cancel: str = order.get("id")
-                self.exchange.cancel_order(order_id_to_cancel)
+
+                # Kucoin has no problem recognizing an order by ID only
+                if self.exchange_name != "kucoin":
+                    self.exchange.cancel_order(id=order_id_to_cancel, symbol=self.symbol)
+
+                # Other exchanges might not be the same
+                else:
+                    self.exchange.cancel_order(id=order_id_to_cancel)
                 self.user_output(f"[ACTION DONE]\t☑️ {Color.BOLD}Order"
                       f" cancelled{Color.END} with id: {order_id_to_cancel}")
             return True
