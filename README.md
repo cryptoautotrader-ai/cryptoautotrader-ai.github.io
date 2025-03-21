@@ -6,6 +6,8 @@
 
 *See [LICENSE](LICENSE) for more clarification. And do read this README carefully.*
 
+***At this point any feedback is really appreciated – do get in touch with me in a way you see fit.***
+
 # Crypto Autotrader
 
 <img src="images/logo-modified.png" width=100 /> © Stan
