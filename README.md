@@ -179,10 +179,12 @@ Optional arguments:
 
     python3 run.py run -e main.env -p probability_llm.env
 
+
 * `-d` or `--dashboard` – specify this argument to run in [dashboard mode](#plotlydash-normal-scale-partial-screen) on default 0.0.0.0:8050 (or change in [config.py](config.py) class DashServer)
 
-    
+
     python3 run.py run -e main.env -p probability_llm.env --dashboard
+
 
 Alternatively run from outside project directory (change `<path_to_`run.py`>` to actual path):
 
