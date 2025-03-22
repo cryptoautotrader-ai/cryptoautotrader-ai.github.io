@@ -27,6 +27,11 @@ class Color:
     UNDERLINE: str = "\033[4m"
     END: str = "\033[0m"
 
+@dataclass
+class DashServer:
+    HOST: str = "0.0.0.0"
+    PORT: int = 8050
+
 
 class Styles:
     """CCS styles"""

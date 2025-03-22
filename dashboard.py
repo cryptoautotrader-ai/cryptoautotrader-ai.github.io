@@ -5,7 +5,7 @@ from dash.dependencies import Input, Output
 from waitress import serve
 import plotly.graph_objs as go
 
-from config import Styles
+from config import DashServer, Styles
 
 # Dash app initialization
 app = dash.Dash(__name__, server=True, update_title="")
@@ -137,5 +137,5 @@ def run_dashboard():
     """Starts the Dash server in a separate thread."""
     threading.Thread(target=lambda: serve(
         app=app.server,
-        host="0.0.0.0", port=8050
+        host=DashServer.HOST, port=DashServer.PORT
     ), daemon=True).start()
