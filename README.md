@@ -26,9 +26,11 @@ This software is open source under a permissive [License](LICENSE), and it's FRE
 
 *Support for older Python versions is not guaranteed, but deemed probable for 3.10 and newer.*
 
-**Console** only or **PlotlyDash** GUI optional.
+**Console** only or beautiful **PlotlyDash** GUI.
 
 ## Features
+
+* **(NEW MODERN STYLES) Optional **GUI** powered by plotly/dash**
 
 * Test mode to only test the prediction API – no trades would be made (suitable for LLM APIs; Pandas – not so much)
 
@@ -173,15 +175,20 @@ Specify either `run` or `test` command to run the script in main mode or test mo
 Optional arguments: 
 * `-p` or `--predictions` – specify `.env` file with prediction API needed info
 * `-e` or `--env` – specify `.env` file with exchange API needed info
+    
+
+    python3 run.py run -e main.env -p probability_llm.env
+
+* `-d` or `--dashboard` – specify this argument to run in [dashboard mode](#plotlydash-normal-scale-partial-screen) on default 0.0.0.0:8050 (or change in [config.py](config.py) class DashServer)
 
     
-    python3 run.py run -e main.env -p probability_llm.env
+    python3 run.py run -e main.env -p probability_llm.env --dashboard
 
 Alternatively run from outside project directory (change `<path_to_`run.py`>` to actual path):
 
-    sudo python3 <path_to_`run.py`> run -e main.env -p probability_llm.env
+    sudo python3 <path_to_`run.py`> run -e main.env -p probability_llm.env --dashboard
 
-*Administrator password might be prompted to enter*
+*One might be prompted to enter Administrator password*
 
 ***Run in test mode***:
 
@@ -277,6 +284,13 @@ See my relevant affiliate links:
 
 The software sends user-appealing info messages to the console.
 
+### Plotly/Dash (scaled down to fit screen)
+   <img src="images/web_gui.png" width=300 />
+
+### Plotly/Dash (normal scale, partial screen)
+   <img src="images/web_gui_actual_scale.png" width=300 />
+
+### Console mode
    <img src="images/1.png" width=300 />
 
    <img src="images/2.png" width=300 />
