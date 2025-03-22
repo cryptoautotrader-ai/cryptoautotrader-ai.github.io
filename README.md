@@ -173,14 +173,14 @@ Required:
 Specify either `run` or `test` command to run the script in main mode or test mode, respectively.
 
 Optional arguments: 
-* `-p` or `--predictions` – specify `.env` file with prediction API needed info
-* `-e` or `--env` – specify `.env` file with exchange API needed info
+- `-p` or `--predictions` – specify `.env` file with prediction API needed info
+- `-e` or `--env` – specify `.env` file with exchange API needed info
     
 
     python3 run.py run -e main.env -p probability_llm.env
 
 
-* `-d` or `--dashboard` – specify this argument to run in [dashboard mode](#plotlydash-normal-scale-partial-screen) on default 0.0.0.0:8050 (or change in [config.py](config.py) class DashServer)
+- `-d` or `--dashboard` – specify this argument to run in [dashboard mode](#plotlydash-normal-scale-partial-screen) on default 0.0.0.0:8050 (or change in [config.py](config.py) class DashServer)
 
   
     python3 run.py run -e main.env -p probability_llm.env --dashboard
