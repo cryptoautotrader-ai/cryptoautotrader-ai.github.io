@@ -177,6 +177,7 @@ Optional arguments:
 - `-e` or `--env` – specify `.env` file with exchange API needed info
 - `-d` or `--dashboard` – specify this argument to run in [dashboard mode](#plotlydash-normal-scale-partial-screen) on default 0.0.0.0:8050 (or change in [config.py](config.py) class DashServer)
 
+Example run
 
     python3 run.py run -e main.env -p probability_llm.env
 
