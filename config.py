@@ -28,6 +28,42 @@ class Color:
     END: str = "\033[0m"
 
 
+class Styles:
+    """CCS styles"""
+
+    GENERIC_DIV: dict = {
+        "backgroundColor": "rgba(0,0,0,0.6)",  # Dark background for containers
+        "padding": "20px",
+        "borderRadius": "15px",
+        "marginBottom": "20px",
+        "boxShadow": "0px 4px 10px rgba(0, 0, 0, 0.4)"
+    }
+    GENERIC_FONT: dict = {"color": "#F4F1EB", "fontFamily": "Poppins, sans-serif"}
+    HEADER: dict = {
+        "textAlign": "center",
+        "fontFamily": "Poppins, sans-serif",
+        "color": "#F4F1EB",  # Eggshell white color for contrast
+        "backgroundColor": "rgba(0,0,0,0.7)",  # Dark background for the header
+        "padding": "30px",
+        "borderRadius": "15px",
+        "boxShadow": "0px 4px 10px rgba(0, 0, 0, 0.5)"
+    }
+    INTERVAL: dict = {
+        "background": "linear-gradient(135deg, #00C9A7, #FF6A5C, #1E3A8A)",
+        # New vibrant gradient with teal, coral, and blue
+        "color": "#F4F1EB",  # Eggshell white color for text
+        "fontFamily": "Poppins, sans-serif",
+        "padding": "40px",
+        "borderRadius": "15px",
+        "boxShadow": "0px 4px 15px rgba(0, 0, 0, 0.2)"
+    }
+    PARAGRAPH: dict = {
+        "fontSize": "20px",
+        "color": "#F4F1EB",
+        "fontFamily": "Poppins, sans-serif"
+    }
+
+
 @dataclass
 class TestData:
     __test__ = False

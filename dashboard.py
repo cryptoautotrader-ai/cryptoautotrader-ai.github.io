@@ -5,6 +5,8 @@ from dash.dependencies import Input, Output
 from waitress import serve
 import plotly.graph_objs as go
 
+from config import Styles
+
 # Dash app initialization
 app = dash.Dash(__name__, server=True, update_title="")
 app.title = "Crypto Autotrader Dashboard"
@@ -61,29 +63,29 @@ def get_memory_messages():
 
 # Define Dashboard Layout
 app.layout = html.Div([
-    html.H1("Crypto Autotrader Dashboard", style={'textAlign': 'center'}),
+    html.H1("Crypto Autotrader Dashboard", style=Styles.HEADER),
 
     # Memory Usage Display
     html.Div([
-        html.H3("Memory Usage"),
-        html.P(id="memory-usage", style={'fontSize': '20px', 'color': 'blue'})
-    ], style={'border': '2px solid #ddd', 'padding': '10px', 'margin': '10px'}),
+        html.H3("Memory Usage", style=Styles.GENERIC_FONT),
+        html.P(id="memory-usage", style=Styles.PARAGRAPH)
+    ], style=Styles.GENERIC_DIV),
 
     # Transaction Cost Chart
     html.Div([
-        html.H3("Transaction Cost Over Time"),
+        html.H3("Transaction Cost Over Time", style=Styles.GENERIC_FONT),
         dcc.Graph(id="transaction-cost-chart")
-    ], style={'border': '2px solid #ddd', 'padding': '10px', 'margin': '10px'}),
+    ], style=Styles.GENERIC_DIV),
 
     # Notifications
     html.Div([
-        html.H3("Latest Notifications"),
-        html.Ul(id="info-messages")
-    ], style={'border': '2px solid #ddd', 'padding': '10px', 'margin': '10px'}),
+        html.H3("Latest Notifications", style=Styles.GENERIC_FONT),
+        html.Ul(id="info-messages", style=Styles.GENERIC_FONT)
+    ], style=Styles.GENERIC_DIV),
 
     # Live update intervals
     dcc.Interval(id="interval-component", interval=10000, n_intervals=0)
-])
+], style=Styles.INTERVAL)
 
 
 # Callback to update memory usage
