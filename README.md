@@ -284,9 +284,6 @@ See my relevant affiliate links:
 
 The software sends user-appealing info messages to the console.
 
-### Plotly/Dash (scaled down to fit screen)
-   <img src="images/web_gui.png" width=300 />
-
 ### Plotly/Dash (normal scale, partial screen)
    <img src="images/web_gui_actual_scale.png" width=300 />
 
