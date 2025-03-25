@@ -34,7 +34,7 @@ This software is open source under a permissive [License](LICENSE), and it's FRE
 
 * Test mode to only test the prediction API – no trades would be made (suitable for LLM APIs; Pandas – not so much)
 
-* LLM connection is through an API (any 'openai' library supported API's)
+* LLM connection is through an API (any 'openai' library supported APIs)
 
 * This script endlessly places buy and sell orders based on predictive modeling (with calculations of price and
   amount, see function `prepare_order` of class `TradingBot` in module [trading_bot.py](trading_bot.py)):
@@ -130,7 +130,7 @@ If `DEFAULT_PREDICTION_API=LLM`, then:
 
 `LLM_MODEL` – model to use,
 
-Also if `DEFAULT_PREDICTION_API=PROBABILITY_LLM`, then additional:
+Also, if `DEFAULT_PREDICTION_API=PROBABILITY_LLM`, then additional:
 
 `LOWER_PROB` – Sell signal, if lower than (default 20)
 
@@ -138,7 +138,7 @@ Also if `DEFAULT_PREDICTION_API=PROBABILITY_LLM`, then additional:
 
 ## Deployment
 
-*Steps 3 and 4 are irrelevant, if [.Dockerfile](.Dockerfile) is used*
+*Steps 3 and 4 are irrelevant, if [Dockerfile](Dockerfile) is used*
 
 Running with a `-d` or `--dashboard` flag will result in forwarding program output to a local flask server of a Dash app (only supported for `run` mode).
 This dashboard option will also show a plot of transaction cost for successfully placed orders (upward transaction cost trend coincides with portfolio estimation growth, so it's useful info).
@@ -209,7 +209,7 @@ Untested. Windows users must be smart enough to figure out the quirks.
 
 ### Docker
 
-Untested! The [.Dockerfile](.Dockerfile) is shipped with essential commands.
+Untested! The [Dockerfile](Dockerfile) is shipped with essential commands.
 
 ## License
 
