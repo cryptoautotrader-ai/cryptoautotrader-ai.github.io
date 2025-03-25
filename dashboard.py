@@ -137,5 +137,7 @@ def run_dashboard():
     """Starts the Dash server in a separate thread."""
     threading.Thread(target=lambda: serve(
         app=app.server,
-        host=DashServer.HOST, port=DashServer.PORT
+        host=DashServer.HOST,
+        port=DashServer.PORT,
+        threads=7
     ), daemon=True).start()
