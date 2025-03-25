@@ -67,6 +67,9 @@ class Styles:
         "color": "#F4F1EB",
         "fontFamily": "Poppins, sans-serif"
     }
+    UNORDERED_LIST: dict = GENERIC_FONT | {"list-style": "none",
+                                           "text-wrap": "wrap",
+                                           "line-height": "1.5"}
 
 
 @dataclass

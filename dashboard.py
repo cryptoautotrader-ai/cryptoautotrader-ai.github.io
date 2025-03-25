@@ -80,7 +80,7 @@ app.layout = html.Div([
     # Notifications
     html.Div([
         html.H3("Latest Notifications", style=Styles.GENERIC_FONT),
-        html.Ul(id="info-messages", style=Styles.GENERIC_FONT)
+        html.Ul(id="info-messages", style=Styles.UNORDERED_LIST)
     ], style=Styles.GENERIC_DIV),
 
     # Live update intervals
@@ -130,7 +130,7 @@ def update_transaction_cost_chart(_):
 )
 def update_info_messages(_):
     messages = get_info_messages()
-    return [html.Li(msg) for msg in messages[-10:]]
+    return [html.Li(html.Pre(msg)) for msg in messages[-10:]]
 
 
 def run_dashboard():
