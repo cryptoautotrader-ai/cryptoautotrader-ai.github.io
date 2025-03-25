@@ -37,7 +37,7 @@ This software is open source under a permissive [License](LICENSE), and it's FRE
 * LLM connection is through an API (any 'openai' library supported API's)
 
 * This script endlessly places buy and sell orders based on predictive modeling (with calculations of price and
-  amount, see function `prepare_order` of class `App` in module [run.py](run.py)):
+  amount, see function `prepare_order` of class `TradingBot` in module [trading_bot.py](trading_bot.py)):
 
   a. Price for 'BUY' orders is `((bid + ask) / 2) * (1 - parametrized premium)`,
 
