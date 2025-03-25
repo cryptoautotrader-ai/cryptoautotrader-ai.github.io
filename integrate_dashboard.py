@@ -11,7 +11,7 @@ class OutputIntegration:
     def output(self: Self):
         if self.mode == "console":
             return print
-        elif self.mode == 'dashboard':
+        elif self.mode == "dashboard":
             return add_info_message
 
     @property
@@ -21,7 +21,7 @@ class OutputIntegration:
             return lambda *args, **kwargs: None
 
         # Running data through external function
-        elif self.mode == 'dashboard':
+        elif self.mode == "dashboard":
             return add_transaction_cost
 
     @property

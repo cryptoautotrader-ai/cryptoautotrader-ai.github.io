@@ -8,12 +8,12 @@ from dataclasses import dataclass
 
 @dataclass
 class GeneralParameters:
-    DEFAULT_MAX_RAM: int = 256
+    DEFAULT_MAX_RAM_MB: int = 256
 
 
 @dataclass
 class Color:
-    """Colors to alter console output"""
+    """USAGE DEPRECATED. Colors to alter console output"""
 
     PURPLE: str = "\033[95m"
     CYAN: str = "\033[96m"
