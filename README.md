@@ -99,6 +99,8 @@ additional premium/discount on bid/ask)
 their portfolio, before an order can be placed (If that isn't the case, the script will show a
 `ProbablyAIButCouldBeAnything` exception with the ticker of the token one doesn't own).
 
+`TRADING_BASE`, `TRADING_QUOTE` – if a trading pair doesn't have a `/` sign, these are necessary (i.e., if `TRADING_PAIR=XMRUSDT`, then `TRADING_BASE=XMR` and `TRADING_QUOTE=USDT` MUST be supplied)
+
 ### Predictive module variables
 
 *(easier to create a new `llm.env` or `probability.env`, or `pandas.env` as per [example 1](llm.env.example) or 
