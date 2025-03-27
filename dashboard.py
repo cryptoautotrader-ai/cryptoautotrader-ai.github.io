@@ -8,8 +8,9 @@ import plotly.graph_objs as go
 from config import DashServer, Styles
 
 # Dash app initialization
-app = dash.Dash(__name__, server=True, update_title="")
+app = dash.Dash(__name__, server=True, update_title="", assets_folder="images")
 app.title = "Crypto Autotrader Dashboard"
+app._favicon = "logo-modified.png"
 
 # Thread-safe global data storage
 _data_lock = threading.Lock()
