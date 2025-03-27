@@ -32,7 +32,8 @@ class PredictionApp:
     def __init__(self: Self, env_file_path: str = None) -> None:
         """
         Initialize prediction app class instance
-        :param env_file_path:
+
+        :param env_file_path: .env file path, where to look for required variables
         """
 
         # If .env filepath is supplied, use it. Or else '.env' is used.
@@ -87,7 +88,7 @@ class PredictionApp:
     def predict_up_or_down(self: Self) -> Callable[[Any], str]:
         """
 
-        :return: function or default lambda
+        :return: function or default lambda (a predictor function)
         """
 
         match self.prediction_api:
