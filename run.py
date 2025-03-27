@@ -2,22 +2,26 @@
 Main bot module
 
 @Developer: Stan
-@AppVersion: 3.3.0
+@AppVersion: 3.3.1
 @PythonVersion: 3.13
 
 """
 
+# Python default library ---------
 import argparse
 import sys
 from os import PathLike
 from os.path import abspath, dirname, join
 from typing import Any, Callable
+# --------------------------------
 
+# Own modules --------------------
 import dashboard
-from integrate_dashboard import OutputIntegration
 from config import TestData
+from integrate_dashboard import OutputIntegration
 from predict import PredictionApp
 from trading_bot import TradingBot
+# --------------------------------
 
 
 def global_main() -> None:
