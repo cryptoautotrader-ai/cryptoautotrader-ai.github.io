@@ -135,10 +135,17 @@ def update_info_messages(_):
 
 
 def run_dashboard():
-    """Starts the Dash server in a separate thread."""
-    threading.Thread(target=lambda: serve(
-        app=app.server,
-        host=DashServer.HOST,
-        port=DashServer.PORT,
-        threads=7
-    ), daemon=True).start()
+    """Starts the Dash server in parallel."""
+
+    parallel_target_kwargs: dict = {
+        "app": app.server,
+        "host": DashServer.HOST,
+        "port": DashServer.PORT,
+        "threads": 8
+    }
+
+    threading.Thread(
+        target=serve,
+        kwargs=parallel_target_kwargs,
+        daemon=True
+    ).start()
