@@ -22,42 +22,70 @@ X = 1024 * 1024
 
 
 # Thread-safe functions for modifying data
-def add_transaction_cost(cost: float):
-    """Thread-safe function to add a transaction cost."""
+def add_transaction_cost(cost: float) -> None:
+    """Thread-safe function to add a transaction cost.
+
+    :param cost: float to add to local storage of transaction costs (deal values)
+    :return: None
+    """
+
     with _data_lock:
         _transaction_costs.append(cost)
         if len(_transaction_costs) > 50:
             _transaction_costs.pop(0)
 
 
-def add_info_message(message: str):
-    """Thread-safe function to add an info message."""
+def add_info_message(message: str) -> None:
+    """Thread-safe function to add an info message.
+
+    :param message: string to add to local storage of info messages
+    :return: None
+    """
+
     with _data_lock:
         _info_messages.append(message)
 
 
-def add_memory_messages(memory_message: str):
-    """Thread-safe function to add an info message."""
+def add_memory_messages(memory_message: str) -> None:
+    """
+    Thread-safe function to add an info message.
+
+    :param memory_message: string to add to local storage of memory messages
+    :return: None
+    """
+
     with _data_lock:
         _memory_messages.append(memory_message)
         if len(_memory_messages) > 1:
             _memory_messages.pop(0)
 
 
-def get_transaction_costs():
-    """Thread-safe function to retrieve transaction costs."""
+def get_transaction_costs() -> list[float]:
+    """Thread-safe function to retrieve transaction costs.
+
+    :return: list of floating point numbers
+    """
+
     with _data_lock:
         return _transaction_costs
 
 
-def get_info_messages():
-    """Thread-safe function to retrieve info messages."""
+def get_info_messages() -> list[str]:
+    """Thread-safe function to retrieve info messages.
+
+    :return: list of strings
+    """
+
     with _data_lock:
         return _info_messages
 
 
-def get_memory_messages():
-    """Thread-safe function to retrieve info messages."""
+def get_memory_messages() -> list[str]:
+    """Thread-safe function to retrieve info messages.
+
+    :return: list of strings
+    """
+
     with _data_lock:
         return _memory_messages
 
@@ -135,7 +163,7 @@ def update_info_messages(_):
 
 
 def run_dashboard():
-    """Starts the Dash server in parallel."""
+    """Start the Dash server in parallel."""
 
     parallel_target_kwargs: dict = {
         "app": app.server,
