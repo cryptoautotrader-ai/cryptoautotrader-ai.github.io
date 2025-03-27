@@ -15,7 +15,7 @@ app._favicon = "logo-modified.png"
 # Thread-safe module-global / program-local data storage
 _data_lock: threading.Lock = threading.Lock()
 _info_messages: list[str] = []
-_memory_messages: set[str] = set()
+_memory_messages: list[str] = []
 _transaction_costs: list[float] = []
 
 
@@ -54,11 +54,11 @@ def add_memory_messages(memory_message: str) -> None:
     """
 
     with _data_lock:
-        _memory_messages.add(memory_message)
+        _memory_messages.append(memory_message)
 
         # Keep memory storage to only include a single message
         if len(_memory_messages) > 1:
-            _memory_messages.pop()
+            _memory_messages.pop(0)
 
 
 def get_transaction_costs() -> list[float]:
@@ -81,10 +81,10 @@ def get_info_messages() -> list[str]:
         return _info_messages
 
 
-def get_memory_messages() -> set[str]:
+def get_memory_messages() -> list[str]:
     """Thread-safe function to retrieve info messages.
 
-    :return: set of strings
+    :return: list of strings
     """
 
     with _data_lock:
