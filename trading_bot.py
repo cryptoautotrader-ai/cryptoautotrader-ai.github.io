@@ -173,8 +173,9 @@ class TradingBot:
 
         try:
             orderbook: Mapping[str, Any] = self.exchange.fetch_order_book(symbol=self.symbol)
-            bid: Any = orderbook["bids"][0][0] if len(orderbook["bids"]) > 0 else None
-            ask: Any = orderbook["asks"][0][0] if len(orderbook["asks"]) > 0 else None
+            all_bids, all_asks = orderbook["bids"], orderbook["asks"]
+            bid: Any = all_bids[0][0] if len(all_bids) > 0 else None
+            ask: Any = all_asks[0][0] if len(all_asks) > 0 else None
             if not ask:
                 raise Exception("Ask price is None")
             if not bid:
