@@ -198,9 +198,6 @@ class TradingBot:
         mean_price: float = (ask + bid) / 2
         price_buy: float = mean_price * (1 - self.premium)
         price_sell: float = mean_price * (1 + self.premium)
-        # price_buy = price_sell = mean_price
-        # price_buy: float = ask
-        # price_sell: float = bid
 
         # Calculate how much of quote asset is about to be spent on a buy order
         amount_to_buy_in_quote_asset: float = self.algorithm_trust_percentage * quote_asset_balance
