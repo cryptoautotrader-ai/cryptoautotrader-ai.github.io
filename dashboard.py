@@ -47,19 +47,19 @@ def add_memory_messages(memory_message: str):
 def get_transaction_costs():
     """Thread-safe function to retrieve transaction costs."""
     with _data_lock:
-        return list(_transaction_costs)
+        return _transaction_costs
 
 
 def get_info_messages():
     """Thread-safe function to retrieve info messages."""
     with _data_lock:
-        return list(_info_messages)
+        return _info_messages
 
 
 def get_memory_messages():
     """Thread-safe function to retrieve info messages."""
     with _data_lock:
-        return list(_memory_messages)
+        return _memory_messages
 
 
 # Define Dashboard Layout
