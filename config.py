@@ -8,6 +8,9 @@ from dataclasses import dataclass
 
 @dataclass
 class GeneralParameters:
+    """General application parameters"""
+
+    # Better to keep this over 100
     DEFAULT_MAX_RAM_MB: int = 256
 
 
@@ -29,12 +32,14 @@ class Color:
 
 @dataclass
 class DashServer:
+    """Dashboard server settings"""
+
     HOST: str = "0.0.0.0"
     PORT: int = 8050
 
 
 class Styles:
-    """CCS styles"""
+    """CCS styles for Dashboard"""
 
     GENERIC_DIV: dict = {
         "backgroundColor": "rgba(0,0,0,0.6)",  # Dark background for containers
@@ -74,6 +79,8 @@ class Styles:
 
 @dataclass
 class TestData:
+    """Data for both test mode and automated tests"""
+
     __test__ = False
     # TEST DATA (For LLM API. Pandas won't necessarily be so predictable)
     # Data for uptrend
