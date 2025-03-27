@@ -226,7 +226,7 @@ class TradingBot:
             self.cancel_order_counter = 0
             for order in open_orders:
                 order_id_to_cancel: str = order.get("id")
-                self.exchange.cancel_order(order_id_to_cancel)
+                self.exchange.cancel_order(id=order_id_to_cancel, symbol=self.symbol)
                 self.user_output(f"[ACTION DONE]\t☑️ Order"
                       f" cancelled with id: {order_id_to_cancel}")
             return True
