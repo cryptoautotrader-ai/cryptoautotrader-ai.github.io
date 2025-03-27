@@ -59,8 +59,8 @@ class Styles:
         "boxShadow": "0px 4px 10px rgba(0, 0, 0, 0.5)"
     }
     INTERVAL: dict = {
-        "background": "linear-gradient(135deg, #00C9A7, #FF6A5C, #1E3A8A)",
-        # New vibrant gradient with teal, coral, and blue
+        "background": "linear-gradient(135deg, #E6AA68, #E04E1F, #00B1D2)",
+        # New vibrant gradient with Pantone 15-0948 Golden Glow, 17-1446 Tangerine Tango, 16-4535 Blue Atoll
         "color": "#F4F1EB",  # Eggshell white color for text
         "fontFamily": "Poppins, sans-serif",
         "padding": "40px",
