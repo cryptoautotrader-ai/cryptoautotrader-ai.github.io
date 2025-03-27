@@ -21,6 +21,12 @@ from trading_bot import TradingBot
 
 
 def global_main() -> None:
+    """
+    Function to call for main run logic
+
+    :return: None
+    """
+
     console_arguments_parser = argparse.ArgumentParser(
         prog="run.py",
         description="run.py will place trades in accordance with specified parameters. "
