@@ -12,13 +12,11 @@ app = dash.Dash(__name__, server=True, update_title="", assets_folder="images")
 app.title = "Crypto Autotrader Dashboard"
 app._favicon = "logo-modified.png"
 
-# Thread-safe global data storage
-_data_lock = threading.Lock()
-_info_messages = []
-_memory_messages = []
-_transaction_costs = []
-
-X = 1024 * 1024
+# Thread-safe module-global / program-local data storage
+_data_lock: threading.Lock = threading.Lock()
+_info_messages: list[str] = []
+_memory_messages: set[str] = set()
+_transaction_costs: list[float] = []
 
 
 # Thread-safe functions for modifying data
@@ -50,14 +48,17 @@ def add_memory_messages(memory_message: str) -> None:
     """
     Thread-safe function to add an info message.
 
-    :param memory_message: string to add to local storage of memory messages
+    :param memory_message: string to add to local storage
+                        (instance of Python's set class) of memory messages
     :return: None
     """
 
     with _data_lock:
-        _memory_messages.append(memory_message)
+        _memory_messages.add(memory_message)
+
+        # Keep memory storage to only include a single message
         if len(_memory_messages) > 1:
-            _memory_messages.pop(0)
+            _memory_messages.pop()
 
 
 def get_transaction_costs() -> list[float]:
@@ -80,10 +81,10 @@ def get_info_messages() -> list[str]:
         return _info_messages
 
 
-def get_memory_messages() -> list[str]:
+def get_memory_messages() -> set[str]:
     """Thread-safe function to retrieve info messages.
 
-    :return: list of strings
+    :return: set of strings
     """
 
     with _data_lock:
