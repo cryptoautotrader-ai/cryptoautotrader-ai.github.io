@@ -6,7 +6,7 @@
 
 *See [LICENSE](LICENSE) for more clarification. And do read this README carefully.*
 
-***At this point any feedback is really appreciated – do get in touch with me in a way you see fit.***
+***At this point any feedback is really appreciated – do get in touch with me in a way you see fit.***
 
 # Crypto Autotrader
 
@@ -17,8 +17,7 @@
 
 This software is capable of fully autonomous trading on popular cryptocurrency exchanges, once set up correctly.
 
-Currently, it utilizes several naive approaches to spot trading (
-either [price-related crossovers](https://trendspider.com/learning-center/moving-average-crossover-strategies/) or
+Currently, it utilizes several naive approaches to spot trading (either [price-related crossovers](https://trendspider.com/learning-center/moving-average-crossover-strategies/) or
 GPT-powered analytics is an option); however, due to it being highly customizable, one could squeeze better results out
 of it.
 
@@ -228,11 +227,17 @@ fields of study.
 I might be available for hire at a random time. Reach out with offers via email stevietfg+joboffer@gmail.com.
 
 If you'd like to support my endeavors (or my lifestyle, in general), in accordance with the nature and character of this
-software, I accept donations in one truly CRYPTO currency – [Monero (XMR)](https://www.getmonero.org) at addresses:
+software, I directly accept donations in one truly CRYPTO currency – [Monero (XMR)](https://www.getmonero.org) at addresses:
 
 * `83woV72JcSXiPfrddb25znWiPULtkwFmZVXdPGkvNj6DArk3LUxedsG71A7ErK5cRHBTJPpjSorEz6j5sCJs1C1gCjmagaL`
 
 Monero is also the default crypto for this **Crypto Autotrader** to spot-trade.
+
+If you wish to use any other cryptocurrency, use this external provider link (no KYC):
+
+<a href="https://nowpayments.io/donation/cryptoautotrader" target="_blank" rel="noreferrer noopener">
+    <img src="https://nowpayments.io/images/embeds/donation-button-white.svg" alt="Cryptocurrency & Bitcoin donation button by NOWPayments" width="300">
+</a>
 
 ## Support
 
