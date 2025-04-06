@@ -113,6 +113,21 @@ app.layout = html.Div([
         html.Ul(id="info-messages", style=Styles.UNORDERED_LIST)
     ], style=Styles.GENERIC_DIV),
 
+    # Miscellaneous
+    html.Div([
+        html.H3("Support developers of Crypto Autotrader", style=Styles.GENERIC_FONT),
+        html.A(
+            children=[html.Img(
+                id="support-banner",
+                src="https://nowpayments.io/images/embeds/donation-button-white.svg",
+                alt="Cryptocurrency & Bitcoin donation button by NOWPayments"
+            )],
+            href="https://nowpayments.io/donation/cryptoautotrader",
+            target="_blank",
+            rel="noreferrer noopener"
+        )
+    ], style=Styles.HEADER),
+
     # Live update intervals
     dcc.Interval(id="interval-component", interval=10000, n_intervals=0)
 ], style=Styles.INTERVAL)
